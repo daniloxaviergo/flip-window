@@ -41,8 +41,14 @@ next_windows = []
 str_json = open("/home/danilo/scripts/flip360_wids.json", "r").read()
 jjson = json.loads(str_json)
 
-next_windows = filter(lambda window: window.monitor == current_window.monitor and window.workspace == current_window.workspace and window.valid, windows)
+outt = os.popen('/home/danilo/scripts/get_visible_windows.sh').read()
+visible_windows = outt.split("\n")
+visible_windows = [int(w, 16) for w in visible_windows if (len(w) > 0)]
 
+next_windows = filter(lambda window: window.monitor == current_window.monitor and
+                                     window.workspace == current_window.workspace and
+                                     int(window.id, 16) in visible_windows and
+                                     window.valid, windows)
 # buscar o idx da minha janela
 idx = 0
 for window in next_windows:

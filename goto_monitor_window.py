@@ -63,16 +63,22 @@ else:
     key_json = 'm{m}{w}'.format(m=(next_monitor - 1), w=current_window.workspace)
 
 next_window = jjson.get(key_json)
+
+outt = os.popen('/home/danilo/scripts/get_visible_windows.sh').read()
+visible_windows = outt.split("\n")
+visible_windows = [int(w, 16) for w in visible_windows if (len(w) > 0)]
+
 if next_window:
   next_window = WmctrlWindow(next_window)
 
-  for line in lines:
-    if line.find(str(next_window.id)) >= 0:
-      next_window.set_focus()
-      title = next_window.name.encode('ascii', 'ignore')
-      script = '/home/danilo/scripts/dmenu/dzen_monitor.sh'
-      os.popen("{script} {monitor} '{title}'".format(script=script, monitor=next_window.monitor, title=title)).read()
-      sys.exit()
+  if int(next_window.id, 16) in visible_windows:
+    for line in lines:
+      if line.find(str(next_window.id)) >= 0:
+        next_window.set_focus()
+        title = next_window.name.encode('ascii', 'ignore')
+        script = '/home/danilo/scripts/dmenu/dzen_monitor.sh'
+        os.popen("{script} {monitor} '{title}'".format(script=script, monitor=next_window.monitor, title=title)).read()
+        sys.exit()
 
 limit = 6
 while(limit > 0 and len(next_windows) == 0):
@@ -85,11 +91,17 @@ while(limit > 0 and len(next_windows) == 0):
   if(next_monitor == 0):
     next_monitor = 5
 
-  next_windows = filter(lambda window: window.monitor == next_monitor and window.workspace == current_window.workspace and window.valid, windows)
+  next_windows = filter(lambda window: window.monitor == next_monitor and
+                               window.workspace == current_window.workspace and
+                               int(window.id, 16) in visible_windows and
+                               window.valid, windows)
   limit = limit - 1
   
 # filtra as telas por monitor
-next_windows = filter(lambda window: window.monitor == next_monitor and window.workspace == current_window.workspace and window.valid, windows)
+next_windows = filter(lambda window: window.monitor == next_monitor and
+                                     window.workspace == current_window.workspace and
+                                     int(window.id, 16) in visible_windows and
+                                     window.valid, windows)
 
 # focar na window e salvar no json
 next_window = next_windows[0]
