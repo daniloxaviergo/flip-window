@@ -12,7 +12,7 @@ from wmctrl_window import WmctrlWindow
 # sys.exit()
 
 # def ls_window
-outt = os.popen('wmctrl -dliGu').read()
+outt = os.popen('wmctrl -dliGux').read()
 lines = outt.split("\n")
 lines.pop()
 
@@ -67,14 +67,15 @@ else:
     idx = 0
 
 next_window = next_windows[idx]
-key_json = 'm{m}{w}'.format(m=next_window.monitor, w=current_window.workspace)
-jjson[key_json] = next_window.str_win
-
-flip360 = open("/home/danilo/scripts/flip360_wids.json", "w")
-flip360.write(json.dumps(jjson))
-flip360.close()
-
 next_window.set_focus()
+# key_json = 'm{m}{w}'.format(m=next_window.monitor, w=current_window.workspace)
+# jjson[key_json] = next_window.str_win
+
+# flip360 = open("/home/danilo/scripts/flip360_wids.json", "w")
+# flip360.write(json.dumps(jjson))
+# flip360.close()
+
+title  = next_window.name.encode('ascii', 'ignore')
 script = '/home/danilo/scripts/dmenu/dzen_monitor.sh'
-os.popen("{script} {monitor} '{title}'".format(script=script, monitor=current_window.monitor, title=next_window.name)).read()
+os.popen("{script} {monitor} '{title}'".format(script=script, monitor=current_window.monitor, title=title)).read()
 sys.exit()

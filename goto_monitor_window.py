@@ -107,12 +107,12 @@ next_windows = filter(lambda window: window.monitor == next_monitor and
 next_window = next_windows[0]
 next_window.set_focus()
 
-key_json = 'm{m}{w}'.format(m=next_monitor, w=current_window.workspace)
-jjson[key_json] = next_window.str_win
+# key_json = 'm{m}{w}'.format(m=next_monitor, w=current_window.workspace)
+# jjson[key_json] = next_window.str_win
 
-flip360 = open("/home/danilo/scripts/flip360_wids.json", "w")
-flip360.write(json.dumps(jjson))
-flip360.close()
+# flip360 = open("/home/danilo/scripts/flip360_wids.json", "w")
+# flip360.write(json.dumps(jjson))
+# flip360.close()
 
 title  = next_window.name.encode('ascii', 'ignore')
 script = '/home/danilo/scripts/dmenu/dzen_monitor.sh'
